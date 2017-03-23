@@ -2,6 +2,7 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+
 ALLOWED_HOSTS = [
     'testserver'
 ]
@@ -34,6 +35,8 @@ INSTALLED_APPS = [
     'wagtail.wagtailsearch',
     'wagtail.wagtailadmin',
     'wagtail.wagtailcore',
+
+    'wagtail.contrib.wagtailsitemaps',
 
     'modelcluster',
     'taggit',
@@ -88,7 +91,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'tests', 'templates'),
         ],
         'OPTIONS': {
             'context_processors': [

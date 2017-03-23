@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
+from wagtailbakery.metaviews import template_view_creator
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
     'wagtail.wagtailcore',
 
     'wagtail.contrib.settings',
+    'wagtail.contrib.wagtailsitemaps',
 
     'modelcluster',
     'taggit',
@@ -58,7 +60,7 @@ INSTALLED_APPS = [
     'bakery',
     'wagtailbakery',
 
-	'example',
+    'example',
 ]
 
 MIDDLEWARE = [
@@ -157,4 +159,6 @@ BUILD_DIR = os.path.join(BASE_DIR, '../build')
 
 BAKERY_VIEWS = (
     'wagtailbakery.views.AllPublishedPagesView',
+    'wagtailbakery.views.BuildableSitemapView',
+    template_view_creator("RobotsView", "robots.txt", "robots.txt"),
 )

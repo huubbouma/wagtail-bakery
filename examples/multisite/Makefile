@@ -1,7 +1,7 @@
 all: clean install migrate loaddata runserver
 
 clean:
-	find . -name '*.pyc' | xargs rm
+	find . -name '*.pyc' -exec rm {} \;
 	rm -rf build/ example/public/ example/db.sqlite3
 
 install:

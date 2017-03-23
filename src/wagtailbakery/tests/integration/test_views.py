@@ -1,8 +1,11 @@
-import pytest
+import os
 
+import pytest
 from django.conf import settings
+from wagtailbakery.metaviews import template_view_creator
 from wagtailbakery.views import (
-    AllPagesView, AllPublishedPagesView, WagtailBakeryView)
+    AllPagesView, AllPublishedPagesView, BuildableSitemapView,
+    WagtailBakeryView)
 
 
 @pytest.mark.django_db
@@ -109,3 +112,27 @@ def test_all_pages_for_single_page(page):
     page.save()
     assert qs.filter(live=False).exists()
     assert qs.filter(id=page.id).exists()
+
+
+@pytest.mark.django_db
+def test_build_robots_txt():
+    template_name = 'robots.txt'
+    build_path = 'robots.txt'
+    RobotsView = template_view_creator(
+        "RobotsView", template_name, build_path)
+    view = RobotsView()
+    view.build_method
+    view.build()
+    build_path = os.path.join(settings.BUILD_DIR, build_path)
+    assert os.path.exists(build_path)
+    os.remove(build_path)
+
+
+@pytest.mark.django_db
+def test_build_sitemap_txt():
+    view = BuildableSitemapView()
+    view.build_method
+    view.build()
+    build_path = os.path.join(settings.BUILD_DIR, view.build_path)
+    assert os.path.exists(build_path)
+    os.remove(build_path)

@@ -5,6 +5,7 @@ from bakery.views import BuildableDetailView
 from django.conf import settings
 from django.core.handlers.base import BaseHandler
 from django.utils.six.moves.urllib.parse import urlparse
+from wagtail.contrib.wagtailsitemaps.sitemap_generator import Sitemap
 from wagtail.wagtailcore.models import Page, Site
 
 logger = logging.getLogger(__name__)
@@ -107,3 +108,27 @@ class AllPagesView(WagtailBakeryView):
     """
     def get_queryset(self):
         return Page.objects.filter(depth__gt=1).public().specific()
+
+
+class BuildableSitemapView(WagtailBakeryView):
+    """
+    Build the sitemap
+    """
+
+    build_path = 'sitemap.xml'
+
+    def get_content(self):
+
+        sitemap = Sitemap(self.site)
+        return sitemap.render().encode()
+
+    @property
+    def build_method(self):
+        return self.build
+
+    def build(self):
+        logger.debug("Building %s" % self.build_path)
+        self.request = self.create_request(self.build_path)
+        path = os.path.join(settings.BUILD_DIR, self.build_path)
+        self.prep_directory(self.build_path)
+        self.build_file(path, self.get_content())
